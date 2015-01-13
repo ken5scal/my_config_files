@@ -12,6 +12,7 @@ if has ('mac')
 endif
 
 let g:neobundle#types#git#default_protocol = 'git'
+let g:user_emmet_leader_key='<c-t>'
 
 call neobundle#begin(expand('~/.vim/bundle'))
 call neobundle#end()
@@ -27,6 +28,7 @@ NeoBundle 'scrooloose/syntastic'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'open-browser.vim'
 NeoBundle 'mattn/webapi-vim'
+NeoBundle 'mattn/emmet-vim'
 NeoBundle 'tell-k/vim-browsereload-mac'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'taichouchou2/html5.vim'
