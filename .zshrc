@@ -12,6 +12,8 @@ PROMPT2="> "
 #SPROMPT="%r is correct? [n,y,a,e]: "
 RPROMPT='[ `rprompt-git-current-branch`]'
 RPROMPT2="%K{green}%_%k"
+#パス設定
+export PATH=$PATH:/Users/Kengo/workspace/android/sdk/platform-tools
 # プロンプトが表示されるたびにプロンプト文字列を評価、置換する
 setopt prompt_subst
 ## 入力が右端まで来たらRPROMPTを消す
@@ -179,6 +181,7 @@ alias gcomm='git commit -m '
 alias gbrah='git branch'
 alias gcheo='git checkout'
 alias gpull='git pull'
+alias python=python3
 # Load RVM into a shell session *as a function*
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 # retter settings
@@ -231,4 +234,7 @@ linux*)
 esac
 export GREP_OPTIONS='--binary-files=without-match'
 
-
+# Pythonのvirtualenvwrapper用の設定
+#export PROJECT_HOME=/Users/Kengo/workspace/cracking_conding_interview/
+export WORKON_HOME=/Users/Kengo/workspace/cracking_conding_interview/
+source `which virtualenvwrapper.sh`
