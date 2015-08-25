@@ -15,7 +15,6 @@ let g:neobundle#types#git#default_protocol = 'git'
 let g:user_emmet_leader_key='<c-t>'
 
 call neobundle#begin(expand('~/.vim/bundle'))
-call neobundle#end()
 " 以下のプラグインをバンドル
 NeoBundle 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/unite.vim'
@@ -37,6 +36,8 @@ NeoBundle 'tpope/vim-endwise.git'
 NeoBundle 'ruby-matchit'
 NeoBundle 'vim-scripts/dbext.vim'
 NeoBundle 'tomtom/tcomment_vim'
+" Indentのプラグイン
+NeoBundle 'nathanaelkane/vim-indent-guides'
 " Ruby, Rails関連のプラグイン
 NeoBundle 'taichouchou2/vim-rails'
 NeoBundle 'romanvbabenko/rails.vim'
@@ -60,6 +61,16 @@ NeoBundle 'thinca/vim-quickrun'
 NeoBundle "sjl/gundo.vim"
 " テーマ関連
 NeoBundle "chriskempson/vim-tomorrow-theme"
+NeoBundle 'nanotech/jellybeans.vim'
+NeoBundle 'w0ng/vim-hybrid'
+NeoBundle 'vim-scripts/twilight'
+NeoBundle 'jonathanfilip/vim-lucius'
+NeoBundle 'jpo/vim-railscasts-theme'
+NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'vim-scripts/Wombat'
+NeoBundle 'tomasr/molokai'
+NeoBundle 'vim-scripts/rdark'
+call neobundle#end()
 
 filetype plugin indent on
 filetype indent on
@@ -80,7 +91,8 @@ nnoremap <C-u>m  :Unite file_mru<CR>
 " シンタックスハイライト
 syntax on
 set background=dark
-colorscheme Tomorrow-night
+"colorscheme jellybeans
+colorscheme hybrid
 " エンコード
 set encoding=utf8
 " ファイルエンコード
@@ -103,6 +115,9 @@ set clipboard+=unnamed
 set clipboard=unnamed
 " 不可視文字を表示
 set list
+" 不可視文字を表示
+set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%,eol:↲
+highlight SpecialKey guifg=magenta ctermfg=magenta
 " 行番号を表示
 set number
 " 右下に表示される行・列の番号を表示する
@@ -121,8 +136,6 @@ set matchtime=3
 set wrap
 " 入力されているテキストの最大幅を無効にする
 set textwidth=0
-" 不可視文字を表示
-set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%,eol:↲
 " インデントをshiftwidthの倍数に丸める
 set expandtab
 set tabstop=4
@@ -154,7 +167,9 @@ set ttymouse=xterm2
 " コマンドを画面最下部に表示する
 set showcmd
 hi Comment ctermfg=3
-
+" 編集業の行番号をハイライト
+set cursorline
+hi clear CursorLine
 
 " w!! でスーパーユーザーとして保存（sudoが使える環境限定）
 cmap w!! w !sudo tee > /dev/null %
