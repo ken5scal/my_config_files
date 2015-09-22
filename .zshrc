@@ -2,13 +2,12 @@
 ########################################
 # 環境変数
 export LANG=ja_JP.UTF-8
-#export PATH=/usr/local/bin:/usr/local/Cellar/openssl/1.0.1i/bin:$PATH:$HOME/bin
+export GOPATH=$HOME/workspace/go
 export PATH=/usr/local/bin:$PATH:$HOME/bin
-export PATH=$PATH:/Users/suzuki/workspace/android/sdk/platform-tools:/usr/local/bin:/Users/suzuki/workspace/android-ndk-r10d
+export PATH=$PATH:/Users/Kengo/Library/Android/sdk/platform-tools:/Users/Kengo/Library/Android/sdk/tools:/Users/Kengo/Library/Android/sdk/ndk-bundle:/Users/suzuki/workspace/android/sdk/platform-tools:/usr/local/bin:/Users/suzuki/workspace/android-ndk-r10d:$GOPATH/bin
 # 色を使用出来るようにする
 autoload -Uz colors
 colors
-
 
 # emacs 風キーバインドにする
 bindkey -e
@@ -39,9 +38,9 @@ zstyle ':zle:*' word-style unspecified
 # 補完機能を有効にする
 if which brew > /dev/null; then
     fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
-	else
-	    fpath=(~/.zsh/completion $fpath)
-	fi
+else
+	fpath=(~/.zsh/completion $fpath)
+fi
 autoload -U compinit
 compinit -u
 
@@ -183,20 +182,20 @@ esac
 #fi
 
 
-function peco-select-history() {
-		local tac
-				if which tac > /dev/null; then
-						tac="tac"
-				else
-						tac="tail -r"
-								fi
-								BUFFER=$(\history -n 1 | \
-												eval $tac | \
-												peco --query "$LBUFFER")
-								CURSOR=$#BUFFER
-								zle clear-screen
-}
-zle -N peco-select-history
-bindkey '^r' peco-select-history
+# function peco-select-history() {
+#		local tac
+#				if which tac > /dev/null; then
+#						tac="tac"
+#				else
+#						tac="tail -r"
+#								fi
+#								BUFFER=$(\history -n 1 | \
+#												eval $tac | \
+#												peco --query "$LBUFFER")
+#								CURSOR=$#BUFFER
+#								zle clear-screen
+#}
+#zle -N peco-select-history
+#bindkey '^r' peco-select-history
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"

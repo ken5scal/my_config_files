@@ -1,5 +1,7 @@
 " 互換ではなくVim のデフォルト設定にする
-    let g:rspec_command = "Dispatch rspec {spec}"
+let g:rspec_command = "Dispatch rspec {spec}"
+" Leaderをコンマに
+let mapleader = ","
 set nocompatible
 " 一旦ファイルタイプ関連を無効化
 filetype off
@@ -13,6 +15,8 @@ endif
 
 let g:neobundle#types#git#default_protocol = 'git'
 let g:user_emmet_leader_key='<c-t>'
+" neocompleteを起動時に利用できるように/
+let g:neocomplete#enable_at_startup = 1
 
 call neobundle#begin(expand('~/.vim/bundle'))
 " 以下のプラグインをバンドル
@@ -32,12 +36,16 @@ NeoBundle 'tell-k/vim-browsereload-mac'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'taichouchou2/html5.vim'
 NeoBundle 'kchmck/vim-coffee-script'
-NeoBundle 'tpope/vim-endwise.git' 
+NeoBundle 'tpope/vim-endwise.git'
 NeoBundle 'ruby-matchit'
 NeoBundle 'vim-scripts/dbext.vim'
 NeoBundle 'tomtom/tcomment_vim'
+" ストラクチャ設定
+NeoBundle 'majutsushi/tagbar'
 " Indentのプラグイン
 NeoBundle 'nathanaelkane/vim-indent-guides'
+" Go
+NeoBundle 'fatih/vim-go'
 " Ruby, Rails関連のプラグイン
 NeoBundle 'taichouchou2/vim-rails'
 NeoBundle 'romanvbabenko/rails.vim'
@@ -52,7 +60,7 @@ NeoBundle 'Lokaltog/powerline'
 NeoBundle 'petdance/vim-perl'
 NeoBundle 'hotchpotch/perldoc-vim'
 " シンタックス系プラグインをバンドル
-NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'Shougo/neocomplete'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
 " 実行プラグインをバンドル
@@ -70,11 +78,13 @@ NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'vim-scripts/Wombat'
 NeoBundle 'tomasr/molokai'
 NeoBundle 'vim-scripts/rdark'
+" StatusLineのプラグイン
+NeoBundle 'itchyny/lightline.vim'
 call neobundle#end()
 
+filetype plugin on
 filetype plugin indent on
 filetype indent on
-syntax on
 
 set t_Co=256
 " ファイラー関連
@@ -90,13 +100,27 @@ nnoremap <C-u>m  :Unite file_mru<CR>
 " 環境設定系
 " シンタックスハイライト
 syntax on
-set background=dark
-"colorscheme jellybeans
-colorscheme hybrid
+colorscheme jellybeans
+" lightlineの設定
+set guifont=Inconsolata\ for\ Powerline:h10
+" こっちは日本語フォント
+set guifontwide=Inconsolata\ for\ Powerline:h10
+let g:Powerline_symbols = 'fancy'
+set laststatus=2
+let g:lightline = {
+      \ 'colorscheme': 'jellybeans',
+  \ 'component': {
+      \   'readonly': '%{&readonly?"x":""}',
+      \ },
+      \ 'separator': { 'left': "\ue0b0", 'right': "\ue0b2" },
+      \ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3" }
+      \ }
+
 " エンコード
 set encoding=utf8
 " ファイルエンコード
-set fileencoding=utf-8
+set fileencodings=iso-2022-jp,euc-jp,sjis,utf-8
+set fileformats=unix,dos,mac
 " スクロールする時に下が見えるようにする
 set scrolloff=5
 " .swapファイルを作らない
@@ -116,7 +140,7 @@ set clipboard=unnamed
 " 不可視文字を表示
 set list
 " 不可視文字を表示
-set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%,eol:↲
+set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
 highlight SpecialKey guifg=magenta ctermfg=magenta
 " 行番号を表示
 set number
@@ -139,8 +163,8 @@ set textwidth=0
 " インデントをshiftwidthの倍数に丸める
 set expandtab
 set tabstop=4
-set shiftwidth=2
-set softtabstop=2
+set shiftwidth=4
+set softtabstop=4
 set autoindent
 set smartindent
 " set shiftround
@@ -167,10 +191,11 @@ set ttymouse=xterm2
 " コマンドを画面最下部に表示する
 set showcmd
 hi Comment ctermfg=3
-" 編集業の行番号をハイライト
-set cursorline
-hi clear CursorLine
 
+" TagBarのクイックスタート
+nmap <F8> :TagbarToggle<CR>
+" NERDTreeのクイックスタート
+nmap <F7> :NERDTree<CR>
 " w!! でスーパーユーザーとして保存（sudoが使える環境限定）
 cmap w!! w !sudo tee > /dev/null %
 " 入力モード中に素早くJJと入力した場合はESCとみなす
@@ -212,204 +237,199 @@ nnoremap <silent> [toggle]l :setl list!<CR>:setl list?<CR>
 nnoremap <silent> [toggle]t :setl expandtab!<CR>:setl expandtab?<CR>
 nnoremap <silent> [toggle]w :setl wrap!<CR>:setl wrap?<CR>
 
-	" :e などでファイルを開く際にフォルダが存在しない場合は自動作成
+" :e などでファイルを開く際にフォルダが存在しない場合は自動作成
 function! s:mkdir(dir, force)
-	if !isdirectory(a:dir) && (a:force ||
-			\ input(printf('"%s" does not exist. Create? [y/N]', a:dir)) =~? '^y\%[es]$')
-	call mkdir(iconv(a:dir, &encoding, &termencoding), 'p')
-	endif
-	endfunction
+  if !isdirectory(a:dir) && (a:force ||
+        \ input(printf('"%s" does not exist. Create? [y/N]', a:dir)) =~? '^y\%[es]$')
+    call mkdir(iconv(a:dir, &encoding, &termencoding), 'p')
+  endif
+endfunction
 
-	" vim 起動時のみカレントディレクトリを開いたファイルの親ディレクトリに指定 
+" vim 起動時のみカレントディレクトリを開いたファイルの親ディレクトリに指定 
 function! s:ChangeCurrentDir(directory, bang)
-	if a:directory == ''
-	lcd %:p:h
-	else
-	execute 'lcd' . a:directory
-	endif
+  if a:directory == ''
+    lcd %:p:h
+  else
+    execute 'lcd' . a:directory
+  endif
 
-	if a:bang == ''
-	pwd
-	endif
-	endfunction
+  if a:bang == ''
+    pwd
+  endif
+endfunction
 
-	" ~/.vimrc.localが存在する場合のみ設定を読み込む
-	let s:local_vimrc = expand('~/.vimrc.local')
+" ~/.vimrc.localが存在する場合のみ設定を読み込む
+let s:local_vimrc = expand('~/.vimrc.local')
 if filereadable(s:local_vimrc)
-	execute 'source ' . s:local_vimrc
-	endif
+  execute 'source ' . s:local_vimrc
+endif
 
-	" /{pattern}の入力中は「/」をタイプすると自動で「\/」が、
-	" ?{pattern}の入力中は「?」をタイプすると自動で「\?」が 入力されるようになる
-	cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
-	cnoremap <expr> ? getcmdtype() == '?' ? '\?' : '?'
-	if has('unnamedplus')
-	set clipboard& clipboard+=unnamedplus
-	else
-	set clipboard& clipboard+=unnamed,autoselect
-	endif
+" /{pattern}の入力中は「/」をタイプすると自動で「\/」が、
+" ?{pattern}の入力中は「?」をタイプすると自動で「\?」が 入力されるようになる
+cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
+cnoremap <expr> ? getcmdtype() == '?' ? '\?' : '?'
+if has('unnamedplus')
+  set clipboard& clipboard+=unnamedplus
+else
+  set clipboard& clipboard+=unnamed,autoselect
+endif
 
-	"表示行単位で行移動する
-	nnoremap <silent> j gj
-	nnoremap <silent> k gk
-	"インサートモードでも移動
-	inoremap <c-d> <delete>
-	inoremap <c-j> <down>
-	inoremap <c-k> <up>
-	inoremap <c-h> <left>
-	inoremap <c-l> <right>
-	inoremap <expr> <Tab> pumvisible() ?  "\<C-n>" : "\<TAB>"
-    "画面切り替え
-	nnoremap <c-j> <c-w>j
-	nnoremap <c-k> <c-w>k
-	nnoremap <c-l> <c-w>l
-	nnoremap <c-h> <c-w>h
-	"<space>j, <space>kで画面送り
-	noremap [Prefix]j <c-f><cr><cr>
-	noremap [Prefix]k <c-b><cr><cr>
+"表示行単位で行移動する
+nnoremap <silent> j gj
+nnoremap <silent> k gk
+"インサートモードでも移動
+inoremap <c-d> <delete>
+inoremap <c-j> <down>
+inoremap <c-k> <up>
+inoremap <c-h> <left>
+inoremap <c-l> <right>
+inoremap <expr> <Tab> pumvisible() ?  "\<C-n>" : "\<TAB>"
+"画面切り替え
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-l> <c-w>l
+nnoremap <c-h> <c-w>h
+"<space>j, <space>kで画面送り
+noremap [Prefix]j <c-f><cr><cr>
+noremap [Prefix]k <c-b><cr><cr>
 
-	" PHP用設定
-	" PHP辞書ファイル指定
-	autocmd FileType php,ctp :set dictionary=~/.vim/dict/php.dict
-	" :makeでPHP構文チェック
-	au FileType php setlocal makeprg=php\ -l\ %
-	au FileType php setlocal errorformat=%m\ in\ %f\ on\ line\ %l
-	" PHPの関数やクラスの折りたたみ
-	let php_folding = 0
-	" 文字列の中のSQLをハイライト
-	let php_sql_query = 1
-	" Baselibメソッドのハイライト
-	let php_baselib = 1
-	" HTMLもハイライト
-	let php_htmlInStrings = 1
-	" <? を無効にする→ハイライト除外にする
-	let php_noShortTags = 1
-	" ] や ) の対応エラーをハイライト
-	let php_parent_error_close = 1
-	let php_parent_error_open = 1
-	" SQLのPHP文字リテラルへの整形(:Sqltop, :Sqlfromp)
+" PHP用設定
+" PHP辞書ファイル指定
+autocmd FileType php,ctp :set dictionary=~/.vim/dict/php.dict
+" :makeでPHP構文チェック
+au FileType php setlocal makeprg=php\ -l\ %
+au FileType php setlocal errorformat=%m\ in\ %f\ on\ line\ %l
+" PHPの関数やクラスの折りたたみ
+let php_folding = 0
+" 文字列の中のSQLをハイライト
+let php_sql_query = 1
+" Baselibメソッドのハイライト
+let php_baselib = 1
+" HTMLもハイライト
+let php_htmlInStrings = 1
+" <? を無効にする→ハイライト除外にする
+let php_noShortTags = 1
+" ] や ) の対応エラーをハイライト
+let php_parent_error_close = 1
+let php_parent_error_open = 1
+" SQLのPHP文字リテラルへの整形(:Sqltop, :Sqlfromp)
 function! SQLToPHP()
-	%s/^\(.\+\)$/"\1 " \./g
-	normal G$
-	execute "normal ?.&lt;CR&gt;"
-	normal xxggVG
-	echo "Convert to PHP String is finished."
-	endfunction
-	command! Sqltop :call SQLToPHP()
+  %s/^\(.\+\)$/"\1 " \./g
+  normal G$
+  execute "normal ?.&lt;CR&gt;"
+  normal xxggVG
+  echo "Convert to PHP String is finished."
+endfunction
+command! Sqltop :call SQLToPHP()
 function! SQLFromPHP()
-	%s/^"\(.\+\) " *\.*$/\1/g
-	normal ggVG
-	echo "Convert from PHP String is finished."
-	endfunction
+  %s/^"\(.\+\) " *\.*$/\1/g
+  normal ggVG
+  echo "Convert from PHP String is finished."
+endfunction
 command! Sqlfromp :call SQLFromPHP()
-	" ハイライト色設定
-	highlight Pmenu ctermbg=4
-	highlight PmenuSel ctermbg=1
-	highlight PMenuSbar ctermbg=4
+" ハイライト色設定
+highlight Pmenu ctermbg=4
+highlight PmenuSel ctermbg=1
+highlight PMenuSbar ctermbg=4
 
-	" neocomplcacheを起動時に有効化する
-	let g:neocomplcache_enable_at_startup = 1
-	" 大文字を区切りとしたワイルドカードのように振る舞う機能
-	let g:neocomplcache_enable_camel_case_completion = 1
-	" _区切りの補完を有効化
-	let g:neocomplcache_enable_underbar_completion = 1
-	" 大文字が入力されるまで大文字小文字の区別を無視する
-	let g:neocomplcache_smart_case = 1
-	" シンタックスをキャッシュするときの最小文字長を3に
-	let g:neocomplcache_min_syntax_length = 3
-	"手動補完時に補完を行う入力数を制御
-	let g:neocomplcache_manual_completion_start_length = 0
-	let g:neocomplcache_caching_percent_in_statusline = 1
-	let g:neocomplcache_enable_skip_completion = 1
-	let g:neocomplcache_skip_input_time = '0.5'
-    "neocomplcacheが強制的にcompletefuncを上書きする
-    let g:neocomplcache_force_overwrite_completefunc = 1
-	" Perl用設定
-	autocmd BufNewFile,BufRead *.psgi   set filetype=perl
-	autocmd BufNewFile,BufRead *.t      set filetype=perl
-	" Enable snipMate compatibility feature.↲
-	let g:neosnippet#enable_snipmate_compatibility = 1
-	imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-	smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+" Perl用設定
+autocmd BufNewFile,BufRead *.psgi   set filetype=perl
+autocmd BufNewFile,BufRead *.t      set filetype=perl
+" Enable snipMate compatibility feature.↲
+let g:neosnippet#enable_snipmate_compatibility = 1
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
-	" SuperTab like snippets behavior.
-	" For snippet_complete marker.
-	if has('conceal')
-	set conceallevel=2 concealcursor=i
-	endif
-	" Tell Neosnippet about the other snippets
-	let g:neosnippet#snippets_directory='~/.vim/snippets/snippets'
-	" Define dictionary.
-	let g:neocomplcache_dictionary_filetype_lists = { 'default'    : '', 'perl'       : $HOME . '/.vim/dict/perl.dict' }
+" SuperTab like snippets behavior.
+" For snippet_complete marker.
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
+" Tell Neosnippet about the other snippets
+let g:neosnippet#snippets_directory='~/.vim/snippets/snippets'
+" Define dictionary.
+"let g:neocomplcache_dictionary_filetype_lists = { 'default'    : '', 'perl'       : $HOME . '/.vim/dict/perl.dict' }
 
-	" Java用設定
-	"SQLのJava文字リテラルへの整形(:Sqltoj, :Sqlfromj)
+" Java用設定
+"SQLのJava文字リテラルへの整形(:Sqltoj, :Sqlfromj)
 function! SQLToJava()
-	%s/^\(.\+\)$/"\1 " \+/g
-	normal G$
-	execute "normal ?+\&lt;CR&gt;"
-	normal xxggVG
-	echo "Convert to Java String is finished."
-	endfunction
-	command! Sqltoj :call SQLToJava()
+  %s/^\(.\+\)$/"\1 " \+/g
+  normal G$
+  execute "normal ?+\&lt;CR&gt;"
+  normal xxggVG
+  echo "Convert to Java String is finished."
+endfunction
+command! Sqltoj :call SQLToJava()
 function! SQLFromJava()
-	%s/^"\(.\+\) " *+*$/\1/g
-	normal ggVG
-	echo "Convert from Java String is finished."
-	endfunction
+  %s/^"\(.\+\) " *+*$/\1/g
+  normal ggVG
+  echo "Convert from Java String is finished."
+endfunction
 command! Sqlfromj :call SQLFromJava()
 
-	" Ruby用設定
-	" :makeでRuby構文チェック
-	au FileType ruby setlocal makeprg=ruby\ -c\ %
-	au FileType ruby setlocal errorformat=%m\ in\ %f\ on\ line\ %l
-    let g:rspec_command = "Dispatch rspec {spec}"
-    let g:rsenseHome = '/Users/Kengo/.vim/rsense-0.3'
-    let g:rsenseUseOmniFunc = 1
-    nmap <silent><Leader>c :call RunCurrentSpecFile()<CR>
-    nmap <silent><leader>n :call RunNearestSpec()<CR>
-    nmap <silent><leader>l :call RunLastSpec()<CR>
-    nmap <silent><leader>a :call RunAllSpecs()<CR>
+" Ruby用設定
+" :makeでRuby構文チェック
+au FileType ruby setlocal makeprg=ruby\ -c\ %
+au FileType ruby setlocal errorformat=%m\ in\ %f\ on\ line\ %l
+let g:rspec_command = "Dispatch rspec {spec}"
+let g:rsenseHome = '/Users/Kengo/.vim/rsense-0.3'
+let g:rsenseUseOmniFunc = 1
+nmap <silent><Leader>c :call RunCurrentSpecFile()<CR>
+nmap <silent><leader>n :call RunNearestSpec()<CR>
+nmap <silent><leader>l :call RunLastSpec()<CR>
+nmap <silent><leader>a :call RunAllSpecs()<CR>
 
-    if !exists('g:neocomplcache_omni_patterns')
-      let g:neocomplcache_omni_patterns = {}
-    endif
-    let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+"if !exists('g:neocomplcache_omni_patterns')
+"  let g:neocomplcache_omni_patterns = {}
+"endif
 
-	" Scala用設定
-	" ファイルタイプの追加
-	augroup filetypedetect
-	autocmd! BufNewFile,BufRead *.scala setfiletype scala
-	autocmd! BufNewFile,BufRead *.sbt setfiletype scala
-	augroup END
-	autocmd BufWritePost *.php silent make | if len(getqflist()) != 1 | copen | else | cclose | endif
+"let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 
-	" 行末、行の最初への移動のキーマップ設定
-	:map! <C-e> <Esc>$a
-	:map! <C-a> <Esc>^a
-	:map <C-e> <Esc>$a
-	:map <C-a> <Esc>^a
+" Go用設定
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+let g:go_fmt_command = "goimports"
+au FileType go nmap <leader>gr <Plug>(go-run)
+au FileType go nmap <leader>gb <Plug>(go-build)
+au FileType go nmap <leader>gt <Plug>(go-test)
+au FileType go nmap <leader>gc <Plug>(go-coverage)
+au FileType go nmap <Leader>gds <Plug>(go-def-split)
+au FileType go nmap <Leader>gdv <Plug>(go-def-vertical)
+au FileType go nmap <Leader>gdt <Plug>(go-def-tab)
+au FileType go nmap <Leader>gd <Plug>(go-doc)
+au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
+au FileType go nmap <Leader>info <Plug>(go-info)
+au FileType go nmap <Leader>rename <Plug>(go-rename)
 
-	" Ctrl+dで$、Ctrl+aで@
-	inoremap <C-d> $
-	inoremap <C-a> @
+" 行末、行の最初への移動のキーマップ設定
+:map! <C-e> <Esc>$a
+:map! <C-a> <Esc>^a
+:map <C-e> <Esc>$a
+:map <C-a> <Esc>^a
 
-	" \ + rでスクリプト実行
+" Ctrl+dで$、Ctrl+aで@
+inoremap <C-d> $
+inoremap <C-a> @
+
+" \ + rでスクリプト実行
 nmap <Leader>r <plug>(quickrun)
 
-	" 全角スペースのハイライトを設定
+" 全角スペースのハイライトを設定
 function! ZenkakuSpace()
-	highlight ZenkakuSpace cterm=underline ctermfg=darkgrey gui=underline guifg=darkgrey
-	endfunction
+  highlight ZenkakuSpace cterm=underline ctermfg=darkgrey gui=underline guifg=darkgrey
+endfunction
 
-	if has('syntax')
-	augroup ZenkakuSpace
-	autocmd!
-	" ZenkakuSpaceをカラーファイルで設定するなら次の行は削除
-autocmd ColorScheme       * call ZenkakuSpace()
-	" 全角スペースのハイライト指定
-	autocmd VimEnter,WinEnter * match ZenkakuSpace /　/
-	augroup END
-call ZenkakuSpace()
-	endif
+if has('syntax')
+  augroup ZenkakuSpace
+    autocmd!
+    " ZenkakuSpaceをカラーファイルで設定するなら次の行は削除
+    autocmd ColorScheme       * call ZenkakuSpace()
+    " 全角スペースのハイライト指定
+    autocmd VimEnter,WinEnter * match ZenkakuSpace /　/
+  augroup END
+  call ZenkakuSpace()
+endif
 
