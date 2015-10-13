@@ -403,6 +403,7 @@ au FileType go nmap <Leader>gd <Plug>(go-doc)
 au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
 au FileType go nmap <Leader>info <Plug>(go-info)
 au FileType go nmap <Leader>rename <Plug>(go-rename)
+au FileType go nmap <Leader>
 
 " 行末、行の最初への移動のキーマップ設定
 :map! <C-e> <Esc>$a
