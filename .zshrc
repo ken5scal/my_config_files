@@ -36,6 +36,7 @@ zstyle ':zle:*' word-style unspecified
 ########################################
 # 補完
 # 補完機能を有効にする
+fpath=(/usr/local/share/zsh-completions $fpath)
 if which brew > /dev/null; then
     fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
 else
@@ -182,20 +183,20 @@ esac
 #fi
 
 
-# function peco-select-history() {
-#		local tac
-#				if which tac > /dev/null; then
-#						tac="tac"
-#				else
-#						tac="tail -r"
-#								fi
-#								BUFFER=$(\history -n 1 | \
-#												eval $tac | \
-#												peco --query "$LBUFFER")
-#								CURSOR=$#BUFFER
-#								zle clear-screen
-#}
-#zle -N peco-select-history
-#bindkey '^r' peco-select-history
+ function peco-select-history() {
+		local tac
+				if which tac > /dev/null; then
+						tac="tac"
+				else
+						tac="tail -r"
+								fi
+								BUFFER=$(\history -n 1 | \
+												eval $tac | \
+												peco --query "$LBUFFER")
+								CURSOR=$#BUFFER
+								zle clear-screen
+}
+zle -N peco-select-history
+bindkey '^r' peco-select-history
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
