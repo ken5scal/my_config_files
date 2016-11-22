@@ -3,7 +3,9 @@
 # 環境変数
 export LANG=ja_JP.UTF-8
 export GOPATH=$HOME/workspace/go
-export PATH=/usr/local/bin:$PATH:$HOME/bin
+export PATH=/usr/local/bin:$PATH:$HOME/bin:/usr/local/bin/go_appengine
+export PATH=/Developer/NVIDIA/CUDA-5.5/bin:$PATH
+export DYLD_LIBRARY_PATH=/Developer/NVIDIA/CUDA-5.5/lib:$DYLD_LIBRARY_PATH 
 export PATH=$PATH:/Users/Kengo/Library/Android/sdk/platform-tools:/Users/Kengo/Library/Android/sdk/tools:/Users/Kengo/Library/Android/sdk/ndk-bundle:/Users/suzuki/workspace/android/sdk/platform-tools:/usr/local/bin:/Users/suzuki/workspace/android-ndk-r10d:$GOPATH/bin
 # 色を使用出来るようにする
 autoload -Uz colors
@@ -42,6 +44,12 @@ if which brew > /dev/null; then
 else
 	fpath=(~/.zsh/completion $fpath)
 fi
+# pyenv補完
+#if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+#if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+if [ -s $HOME/.pythonz/etc/bashrc ]; then
+        source $HOME/.pythonz/etc/bashrc
+    fi
 autoload -U compinit
 compinit -u
 
@@ -139,8 +147,8 @@ alias mv='mv -i'
  
 alias mkdir='mkdir -p'
  
-alias mysql='/Applications/MAMP/Library/bin/mysql'
-alias mysqldump='/Applications/MAMP/Library/bin/mysqldump'
+#alias mysql='/Applications/MAMP/Library/bin/mysql'
+#alias mysqldump='/Applications/MAMP/Library/bin/mysqldump'
  
 # sudo の後のコマンドでエイリアスを有効にする
 alias sudo='sudo '
@@ -200,3 +208,16 @@ zle -N peco-select-history
 bindkey '^r' peco-select-history
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
+eval "$(direnv hook zsh)"
+export EDITOR=vim
+
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f /Users/Kengo/Desktop/google-cloud-sdk/path.zsh.inc ]; then
+  source '/Users/Kengo/Desktop/google-cloud-sdk/path.zsh.inc'
+fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f /Users/Kengo/Desktop/google-cloud-sdk/completion.zsh.inc ]; then
+  source '/Users/Kengo/Desktop/google-cloud-sdk/completion.zsh.inc'
+fi
