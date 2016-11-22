@@ -8,6 +8,7 @@ filetype off
 " neobundleでプラグインを管理
 if has('vim_starting')
   set runtimepath+=~/.vim/bundle/neobundle.vim/
+  set runtimepath+=~/.vim/bundle/Vundle.vim
 endif
 if has ('mac')
   let g:vimproc_dll_path = $VIMRUNTIME . '/autoload/vimproc_mac.so'
@@ -17,6 +18,10 @@ let g:neobundle#types#git#default_protocol = 'git'
 let g:user_emmet_leader_key='<c-t>'
 " neocompleteを起動時に利用できるように/
 let g:neocomplete#enable_at_startup = 1
+
+call vundle#begin()
+Plugin 'othree/html5.vim'
+call vundle#end()
 
 call neobundle#begin(expand('~/.vim/bundle'))
 " 以下のプラグインをバンドル
@@ -34,7 +39,7 @@ NeoBundle 'mattn/webapi-vim'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'tell-k/vim-browsereload-mac'
 NeoBundle 'hail2u/vim-css3-syntax'
-NeoBundle 'taichouchou2/html5.vim'
+" NeoBundle 'taichouchou2/html5.vim'
 NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'tpope/vim-endwise.git'
 NeoBundle 'ruby-matchit'
@@ -112,7 +117,6 @@ let g:lightline = {
   \ 'component': {
       \   'readonly': '%{&readonly?"x":""}',
       \ },
-      \ 'separator': { 'left': "\ue0b0", 'right': "\ue0b2" },
       \ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3" }
       \ }
 
@@ -138,9 +142,9 @@ set novisualbell
 set clipboard+=unnamed
 set clipboard=unnamed
 " 不可視文字を表示
-set list
+" set list
 " 不可視文字を表示
-set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
+" set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
 highlight SpecialKey guifg=magenta ctermfg=magenta
 " 行番号を表示
 set number
@@ -273,6 +277,11 @@ if has('unnamedplus')
 else
   set clipboard& clipboard+=unnamed,autoselect
 endif
+
+"括弧補完
+inoremap {<Enter> {}<Left><CR><ESC><S-o>
+inoremap [<Enter> []<Left><CR><ESC><S-o>
+inoremap (<Enter> ()<Left><CR><ESC><S-o>
 
 "表示行単位で行移動する
 nnoremap <silent> j gj
