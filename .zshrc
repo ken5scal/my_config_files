@@ -50,8 +50,8 @@ fi
 #if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 #if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 if [ -s $HOME/.pythonz/etc/bashrc ]; then
-        source $HOME/.pythonz/etc/bashrc
-    fi
+    source $HOME/.pythonz/etc/bashrc
+fi
 autoload -U compinit
 compinit -u
 
@@ -76,9 +76,9 @@ autoload -Uz vcs_info
 zstyle ':vcs_info:*' formats '(%s)-[%b]'
 zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a]'
 precmd () {
-psvar=()
-LANG=en_US.UTF-8 vcs_info
-[[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+    psvar=()
+    LANG=en_US.UTF-8 vcs_info
+    [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
 }
 RPROMPT="%1(v|%F{green}%1v%f|)"
  
@@ -162,14 +162,14 @@ alias -g G='| grep'
 # C で標準出力をクリップボードにコピーする
 # mollifier delta blog : http://mollifier.hatenablog.com/entry/20100317/p1
 if which pbcopy >/dev/null 2>&1 ; then
-# Mac
-alias -g C='| pbcopy'
+    # Mac
+    alias -g C='| pbcopy'
 elif which xsel >/dev/null 2>&1 ; then
-# Linux
-alias -g C='| xsel --input --clipboard'
+    # Linux
+    alias -g C='| xsel --input --clipboard'
 elif which putclip >/dev/null 2>&1 ; then
-# Cygwin
-alias -g C='| putclip'
+    # Cygwin
+    alias -g C='| putclip'
 fi
  
  
@@ -192,19 +192,18 @@ esac
 #    source `brew --prefix`/usr/local/Cellar/bash-completion/1.3/etc/bash_completion
 #fi
 
-
- function peco-select-history() {
-		local tac
-				if which tac > /dev/null; then
-						tac="tac"
-				else
-						tac="tail -r"
-								fi
-								BUFFER=$(\history -n 1 | \
-												eval $tac | \
-												peco --query "$LBUFFER")
-								CURSOR=$#BUFFER
-								zle clear-screen
+function peco-select-history() {
+    local tac
+    if which tac > /dev/null; then
+        tac="tac"
+    else
+        tac="tail -r"
+    fi
+    BUFFER=$(\history -n 1 | \
+        eval $tac | \
+        peco --query "$LBUFFER")
+    CURSOR=$#BUFFER
+    zle clear-screen
 }
 zle -N peco-select-history
 bindkey '^r' peco-select-history
@@ -226,7 +225,9 @@ fi
 
 # Docker Commands
 alias dl="docker ps -ql"
-alias dr="docker rm -f $(docker ps -aq)"
+function dr() {
+    docker rm -f $(docker ps -aq)
+}
 function dri() {
     docker images | awk '$1 ~ /none/ {print $3}' 
 }
