@@ -212,17 +212,6 @@ eval "$(rbenv init -)"
 eval "$(direnv hook zsh)"
 export EDITOR=vim
 
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f /Users/Kengo/Desktop/google-cloud-sdk/path.zsh.inc ]; then
-  source '/Users/Kengo/Desktop/google-cloud-sdk/path.zsh.inc'
-fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f /Users/Kengo/Desktop/google-cloud-sdk/completion.zsh.inc ]; then
-  source '/Users/Kengo/Desktop/google-cloud-sdk/completion.zsh.inc'
-fi
-
 # Docker Commands
 alias dl="docker ps -ql"
 function dr() {
