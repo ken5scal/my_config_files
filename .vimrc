@@ -21,7 +21,7 @@ let g:neocomplete#enable_at_startup = 1
 
 call vundle#begin()
 Plugin 'othree/html5.vim'
-call vundle#end()
+call vundle#end()    
 
 call neobundle#begin(expand('~/.vim/bundle'))
 " 以下のプラグインをバンドル
@@ -167,7 +167,7 @@ set textwidth=0
 " インデントをshiftwidthの倍数に丸める
 set expandtab
 set tabstop=4
-set shiftwidth=4
+set shiftwidth=2
 set softtabstop=4
 set autoindent
 set smartindent
