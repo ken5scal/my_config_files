@@ -47,7 +47,8 @@ else
 	fpath=(~/.zsh/completion $fpath)
 fi
 # pyenv補完
-#if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+export PATH="$HOME/.pyenv/shims:$PATH"
 #if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 if [ -s $HOME/.pythonz/etc/bashrc ]; then
     source $HOME/.pythonz/etc/bashrc
@@ -220,3 +221,10 @@ function dr() {
 function dri() {
     docker images | awk '$1 ~ /none/ {print $3}' 
 }
+
+# The next line updates PATH for the Google Cloud SDK.
+source '/Applications/google-cloud-sdk/path.zsh.inc'
+
+# The next line enables shell command completion for gcloud.
+source '/Applications/google-cloud-sdk/completion.zsh.inc'
+source <(kubectl completion zsh)
