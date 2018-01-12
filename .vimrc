@@ -14,7 +14,7 @@ if has ('mac')
   let g:vimproc_dll_path = $VIMRUNTIME . '/autoload/vimproc_mac.so'
 endif
 
-let g:neobundle#types#git#default_protocol = 'git'
+let g:neobundle#types#git#default_protocol = 'https'
 let g:user_emmet_leader_key='<c-t>'
 " neocompleteを起動時に利用できるように/
 let g:neocomplete#enable_at_startup = 1
