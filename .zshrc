@@ -3,12 +3,8 @@
 # 環境変数
 export LANG=ja_JP.UTF-8
 export GOPATH=$HOME/workspace/go
-#export PYENV_ROOT=/usr/local/var/pyenv
-export PATH=/usr/local/bin:$PATH:$HOME/bin:/usr/local/bin/go_appengine
-export PATH=/Developer/NVIDIA/CUDA-5.5/bin:$PATH
-export DYLD_LIBRARY_PATH=/Developer/NVIDIA/CUDA-5.5/lib:$DYLD_LIBRARY_PATH 
+export PATH=/usr/local/bin:$PATH:$HOME/bin:$HOME/usr/local/bin
 export PATH=$PATH:/Users/Kengo/Library/Android/sdk/platform-tools:/Users/Kengo/Library/Android/sdk/tools:/Users/Kengo/Library/Android/sdk/ndk-bundle:/Users/suzuki/workspace/android/sdk/platform-tools:/usr/local/bin:/Users/suzuki/workspace/android-ndk-r10d:$GOPATH/bin
-export BHT_APIKEY=14004fdf09fa3463b7fcd9ae822a6c32
 # 色を使用出来るようにする
 autoload -Uz colors
 colors
@@ -208,9 +204,6 @@ function peco-select-history() {
 }
 zle -N peco-select-history
 bindkey '^r' peco-select-history
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-eval "$(direnv hook zsh)"
 export EDITOR=vim
 
 # Docker Commands
@@ -222,9 +215,7 @@ function dri() {
     docker images | awk '$1 ~ /none/ {print $3}' 
 }
 
-# The next line updates PATH for the Google Cloud SDK.
-source '/Applications/google-cloud-sdk/path.zsh.inc'
-
-# The next line enables shell command completion for gcloud.
-source '/Applications/google-cloud-sdk/completion.zsh.inc'
-source <(kubectl completion zsh)
+# Homebrew
+export HOMEBREW_NO_INSECURE_REDIRECT=1
+export HOMEBREW_CASK_OPTS="--require-sha --appdir=$HOME/Applications"
+export HOMEBREW_NO_ANALYTICS=1
